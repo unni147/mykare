@@ -1,0 +1,92 @@
+import React from 'react';
+
+interface SummaryData {
+  name: string | null;
+  phone_number: string | null;
+  intent: string | null;
+  actions: string[] | null;
+  appointment_date: string | null;
+  appointment_time: string | null;
+  preferences: string | null;
+  timestamp: string;
+}
+
+interface SummaryScreenProps {
+  summary: SummaryData;
+  onClose: () => void;
+}
+
+export default function SummaryScreen({ summary, onClose }: SummaryScreenProps) {
+  return (
+    <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in duration-300">
+      <div className="bg-white rounded-3xl shadow-xl w-full max-w-lg overflow-hidden border border-slate-100">
+        
+        {/* Header */}
+        <div className="bg-slate-50 px-8 py-6 border-b border-slate-100 flex justify-between items-center">
+          <h2 className="text-xl font-semibold text-slate-800">Conversation Summary</h2>
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-600 transition-colors">
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="p-8 space-y-6">
+          <div className="grid grid-cols-2 gap-6">
+            <div>
+              <p className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-1">Patient</p>
+              <p className="font-semibold text-slate-800">{summary.name || 'Not Provided'}</p>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-1">Phone</p>
+              <p className="font-semibold text-slate-800">{summary.phone_number || 'Not Provided'}</p>
+            </div>
+          </div>
+
+          <div className="bg-blue-50/50 p-4 rounded-xl border border-blue-100/50">
+            <p className="text-sm font-medium text-blue-400 uppercase tracking-wider mb-1">Intent</p>
+            <p className="font-semibold text-blue-900 capitalize">{summary.intent?.replace(/_/g, ' ') || 'Not Detected'}</p>
+          </div>
+
+          <div>
+            <p className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-2">Actions</p>
+            <div className="space-y-2">
+              {summary.actions && Array.isArray(summary.actions) && summary.actions.length > 0 ? (
+                summary.actions.map((action, i) => (
+                  <div key={i} className="flex items-center gap-2 text-slate-700 font-medium">
+                    <svg className="w-5 h-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                    </svg>
+                    {action}
+                  </div>
+                ))
+              ) : (
+                <p className="text-slate-500 italic">No actions recorded.</p>
+              )}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-6">
+            <div>
+              <p className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-1">Appointment</p>
+              <p className="font-semibold text-slate-800">
+                {summary.appointment_date ? new Date(summary.appointment_date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : 'N/A'}
+              </p>
+              <p className="font-semibold text-slate-600">{summary.appointment_time || ''}</p>
+            </div>
+            <div>
+              <p className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-1">Preferences</p>
+              <p className="font-semibold text-slate-800">{summary.preferences || 'None'}</p>
+            </div>
+          </div>
+
+          <div className="pt-4 border-t border-slate-100">
+            <p className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-1">Timestamp</p>
+            <p className="text-sm font-semibold text-slate-600">{summary.timestamp || new Date().toLocaleString()}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
