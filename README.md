@@ -345,6 +345,7 @@ Environment Variable:
 NEXT_PUBLIC_API_URL=<BACKEND_URL>
 ```
 
+"This deployment is running on the free tiers of Render and Vercel, so the first request may take a few seconds due to cold starts. Subsequent interactions are significantly faster."
 ---
 
 # Assessment Requirements Coverage
