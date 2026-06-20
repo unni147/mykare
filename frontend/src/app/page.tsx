@@ -150,7 +150,7 @@ export default function Home() {
 
   const updateLipSync = () => {
     if (ttsAnalyserRef.current && ttsDataArrayRef.current) {
-      ttsAnalyserRef.current.getByteFrequencyData(ttsDataArrayRef.current as Uint8Array);
+      ttsAnalyserRef.current.getByteFrequencyData(ttsDataArrayRef.current as any);
       let sum = 0;
       for (let i = 0; i < ttsDataArrayRef.current.length; i++) {
         sum += ttsDataArrayRef.current[i];
