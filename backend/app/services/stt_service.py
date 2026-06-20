@@ -5,6 +5,9 @@ load_dotenv()
 import httpx
 from fastapi import UploadFile
 
+# Global client keeps the connection pool alive to prevent repeated SSL handshakes
+http_client = httpx.AsyncClient()
+
 DEEPGRAM_API_KEY = os.environ.get("DEEPGRAM_API_KEY")
 
 async def transcribe_audio(file: UploadFile) -> str:
@@ -20,8 +23,7 @@ async def transcribe_audio(file: UploadFile) -> str:
     
     content = await file.read()
     
-    async with httpx.AsyncClient() as client:
-        response = await client.post(url, headers=headers, content=content, timeout=10.0)
+    response = await http_client.post(url, headers=headers, content=content, timeout=10.0)
         
     if response.status_code == 200:
         data = response.json()

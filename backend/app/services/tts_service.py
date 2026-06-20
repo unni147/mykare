@@ -5,6 +5,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# Global client keeps the connection pool alive to prevent repeated SSL handshakes
+http_client = httpx.AsyncClient()
+
 CARTESIA_API_KEY = os.environ.get("CARTESIA_API_KEY")
 
 async def generate_speech(text: str) -> str:
@@ -34,15 +37,14 @@ async def generate_speech(text: str) -> str:
         }
     }
     
-    async with httpx.AsyncClient() as client:
-        try:
-            response = await client.post(url, headers=headers, json=payload, timeout=15.0)
-            
-            if response.status_code == 200:
+    try:
+        response = await http_client.post(url, headers=headers, json=payload, timeout=15.0)
+        
+        if response.status_code == 200:
                 return base64.b64encode(response.content).decode("utf-8")
             else:
                 print(f"Cartesia TTS Error: {response.status_code} - {response.text}")
-                return ""
-        except Exception as e:
-            print(f"Cartesia TTS Exception: {str(e)}")
             return ""
+    except Exception as e:
+        print(f"Cartesia TTS Exception: {str(e)}")
+        return ""
