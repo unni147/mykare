@@ -21,5 +21,5 @@ app.include_router(api_router, prefix="/api")
 app.include_router(conv_router, prefix="/api")
 
 @app.get("/")
-def read_root():
-    return {"message": "Healthcare Voice Assistant API"}
+async def root():
+    return {"message": "Mykare Voice AI Backend Running"}
