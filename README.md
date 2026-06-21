@@ -28,7 +28,7 @@ https://mykare-ai.onrender.com/
 
 ### Demo Video
 
-<DEMO_VIDEO_URL>
+https://www.loom.com/share/64c74d4630e3403788f4c7dbdbb88cd0
 
 ---
 
