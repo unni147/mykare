@@ -7,11 +7,28 @@ import SummaryScreen from '@/components/SummaryScreen';
 
 type AvatarState = 'idle' | 'listening' | 'processing' | 'speaking';
 
+type SummaryData = {
+  name: string | null;
+  phone_number: string | null;
+  intent: string | null;
+  actions: string[] | null;
+  appointment_date: string | null;
+  appointment_time: string | null;
+  preferences: string | null;
+  timestamp: string;
+  metrics?: {
+    stt_cost: number;
+    llm_cost: number;
+    tts_cost: number;
+    total: number;
+  };
+};
+
 export default function Home() {
   const [state, setState] = useState<AvatarState>('idle');
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [sessionId] = useState(() => `sess_${Math.random().toString(36).substring(2, 9)}`);
-  const [summaryData, setSummaryData] = useState<unknown>(null);
+  const [summaryData, setSummaryData] = useState<SummaryData | null>(null);
   const [callStarted, setCallStarted] = useState(false);
   const [duration, setDuration] = useState(0);
   const [isEndingCall, setIsEndingCall] = useState(false);
