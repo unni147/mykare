@@ -107,7 +107,7 @@ This enables visibility into operational expenses and helps evaluate the scalabi
 
 ---
 
-# Architecture
+# Architectures
 
 User Voice
 ↓
