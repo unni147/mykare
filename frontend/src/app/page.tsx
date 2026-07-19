@@ -10,8 +10,8 @@ type AvatarState = 'idle' | 'listening' | 'processing' | 'speaking';
 export default function Home() {
   const [state, setState] = useState<AvatarState>('idle');
   const [logs, setLogs] = useState<LogEntry[]>([]);
-  const [sessionId, setSessionId] = useState("");
-  const [summaryData, setSummaryData] = useState<any>(null);
+  const [sessionId] = useState(() => `sess_${Math.random().toString(36).substring(2, 9)}`);
+  const [summaryData, setSummaryData] = useState<unknown>(null);
   const [callStarted, setCallStarted] = useState(false);
   const [duration, setDuration] = useState(0);
   const [isEndingCall, setIsEndingCall] = useState(false);
@@ -31,10 +31,6 @@ export default function Home() {
     const s = (seconds % 60).toString().padStart(2, '0');
     return `${m}:${s}`;
   };
-  
-  useEffect(() => {
-    setSessionId(`sess_${Math.random().toString(36).substring(2, 9)}`);
-  }, []);
   
   const streamRef = useRef<MediaStream | null>(null);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -150,12 +146,13 @@ export default function Home() {
 
   const updateLipSync = () => {
     if (ttsAnalyserRef.current && ttsDataArrayRef.current) {
-      ttsAnalyserRef.current.getByteFrequencyData(ttsDataArrayRef.current as any);
+      const dataArray = ttsDataArrayRef.current;
+      ttsAnalyserRef.current.getByteFrequencyData(dataArray);
       let sum = 0;
-      for (let i = 0; i < ttsDataArrayRef.current.length; i++) {
-        sum += ttsDataArrayRef.current[i];
+      for (let i = 0; i < dataArray.length; i++) {
+        sum += dataArray[i];
       }
-      const avg = sum / ttsDataArrayRef.current.length;
+      const avg = sum / dataArray.length;
       const scale = Math.min(Math.max((avg / 128), 0.0), 1.0);
       
       const mouth = document.getElementById('avatar-mouth');
@@ -168,7 +165,15 @@ export default function Home() {
 
   const setupTTSAudioContext = (audioEl: HTMLAudioElement) => {
     if (!ttsAudioContextRef.current) {
-      const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+      type WindowWithWebkitAudioContext = Window & typeof globalThis & {
+        webkitAudioContext?: typeof AudioContext;
+      };
+
+      const AudioContextClass = window.AudioContext || (window as WindowWithWebkitAudioContext).webkitAudioContext;
+      if (!AudioContextClass) {
+        throw new Error('AudioContext is not supported in this browser.');
+      }
+
       const ctx = new AudioContextClass();
       const analyser = ctx.createAnalyser();
       analyser.fftSize = 256;
