@@ -10,6 +10,8 @@
 
 
 
+
+
 A production-ready AI-powered healthcare voice assistant that enables users to book, retrieve, modify, and cancel appointments through natural voice conversations.
 
 The assistant combines Speech-to-Text, Large Language Model reasoning, intelligent function calling, and Text-to-Speech to deliver a seamless healthcare receptionist experience.
