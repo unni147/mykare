@@ -40,7 +40,7 @@ export default function Home() {
   // Avatar Lip Sync Refs
   const ttsAudioContextRef = useRef<AudioContext | null>(null);
   const ttsAnalyserRef = useRef<AnalyserNode | null>(null);
-  const ttsDataArrayRef = useRef<Uint8Array | null>(null);
+  const ttsDataArrayRef = useRef<Uint8Array<ArrayBuffer> | null>(null);
   const ttsAnimRef = useRef<number | null>(null);
 
   const addLog = (type: LogEntry['type'], content: string) => {
@@ -183,7 +183,7 @@ export default function Home() {
       
       ttsAudioContextRef.current = ctx;
       ttsAnalyserRef.current = analyser;
-      ttsDataArrayRef.current = new Uint8Array(analyser.frequencyBinCount);
+      ttsDataArrayRef.current = new Uint8Array(analyser.frequencyBinCount) as Uint8Array<ArrayBuffer>;
     }
     if (ttsAudioContextRef.current.state === 'suspended') {
       ttsAudioContextRef.current.resume();
